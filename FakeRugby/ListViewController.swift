@@ -38,8 +38,12 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         resultsController.tableView.dataSource = self
     }
     
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.isHidden = false
+
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
         
         studentArray = []
         filteredArray = []
@@ -53,7 +57,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.textLabel?.text = "                           " + "\(student.lastName), \(student.firstName)"
             cell.textLabel?.textColor = .white
             
-            let label = UILabel(frame: CGRect(x: 5, y: 0, width: 120, height: 45))
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 42))
             label.textColor = .white
             label.textAlignment = .center
             label.layer.addBorder(edge: UIRectEdge.right, color: UIColor.orange, thickness: 0.5)
@@ -75,7 +79,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.textLabel?.text = "                         " + "\(student.lastName), \(student.firstName)"
             cell.textLabel?.textColor = .white
             
-            let label = UILabel(frame: CGRect(x: 5, y: 0, width: 120, height: 45))
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 42))
             label.textAlignment = .center
             label.textColor = .white
             label.layer.addBorder(edge: UIRectEdge.right, color: UIColor.orange, thickness: 0.5)
