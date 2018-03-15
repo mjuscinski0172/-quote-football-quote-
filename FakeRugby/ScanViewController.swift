@@ -115,7 +115,9 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                             self.database.save(student, completionHandler: { (record, error) in
                                 if error != nil {
                                     let alert = UIAlertController(title: "Error", message: error.debugDescription, preferredStyle: .alert)
-                                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                                    let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action) in
+                                        self.runSession()
+                                    })
                                     alert.addAction(okAction)
                                     self.present(alert, animated: true, completion: nil)
                                 }
@@ -179,7 +181,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                             self.present(alert, animated: true, completion: nil)
                         }
                         else {
-                            let alert = UIAlertController(title: "Checked In", message: "Student has been accepted into the game", preferredStyle: .alert)
+                            let alert = UIAlertController(title: "Checked In", message: "Student \(firstName) \(lastName) has been accepted into the game", preferredStyle: .alert)
                             let okAction = UIAlertAction(title: "OK", style: .default, handler: { (action) in
                                 self.runSession()
                             })
