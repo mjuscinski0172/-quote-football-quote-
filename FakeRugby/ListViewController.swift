@@ -136,8 +136,9 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
                 let checkInTime = student.object(forKey: "checkInTime") as! String
                 let checkOutTime = student.object(forKey: "checkOutTime") as! String
                 let studentParentPhone = student.object(forKey: "studentParentPhone") as! String
+                let studentParentName = student.object(forKey: "studentParentName") as! String
                 
-                let newStudent = Student(firstName: firstName, lastName: lastName, altIDNumber: altIDNumber, idNumber: idNumber, checkedInOrOut: checkedInOrOut, checkInTime: checkInTime, checkOutTime: checkOutTime, studentParentPhone: studentParentPhone)
+                let newStudent = Student(firstName: firstName, lastName: lastName, altIDNumber: altIDNumber, idNumber: idNumber, checkedInOrOut: checkedInOrOut, checkInTime: checkInTime, checkOutTime: checkOutTime, studentParentPhone: studentParentPhone, studentParentName: studentParentName)
                 self.studentArray.append(newStudent)
                 
                 self.alphabeticalStudentArray = self.studentArray.sorted(by: { $0.lastName < $1.lastName })
@@ -145,6 +146,18 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let nvc = segue.destination as! DetailsViewController
+        
+        if let indexPath = tableView.indexPathForSelectedRow{
+            nvc.selectedStudent = alphabeticalStudentArray[indexPath.row]
+        }
+        else {
+            let indexPath = resultsController.tableView.indexPathForSelectedRow!
+            nvc.selectedStudent = filteredArray[indexPath.row]
         }
     }
 }
