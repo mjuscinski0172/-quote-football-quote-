@@ -19,6 +19,8 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     var altId = ""
     var pulledStudentArray = [Student]()
     var studentRecordExists = false
+    var url: URL!
+    var studentDictionary: NSDictionary!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -56,12 +58,24 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         previewLayer.videoGravity = AVLayerVideoGravity.resizeAspectFill
         view.layer.addSublayer(previewLayer)
         
+        //Pulls the URL for the JSON
+        var urlString = ""
+        let predicate = NSPredicate(value: true)
+        let JSONQuery = CKQuery(recordType: "JSONUrl", predicate: predicate)
+        database.perform(JSONQuery, inZoneWith: nil) { (records, error) in
+            urlString = records?.first?.object(forKey: "url")! as! String
+            print(urlString)
+            self.url = URL(string: urlString)!
+        }
+        
         session.startRunning()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = false
-        
+        self.navigationController?.navigationBar.barTintColor = UIColor.brown.darker(by: 30)
+        self.navigationController?.navigationBar.tintColor = .white
+
         super.viewWillAppear(animated)
         runSession()
     }
@@ -72,21 +86,24 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     }
     
     func getJSON(altID: String) {
-        let urlString = "https://api.myjson.com/bins/16ljdv"
-        let url = URL(string: urlString)!
-        URLSession.shared.dataTask(with: url, completionHandler: { (myData, response, error) in
+        URLSession.shared.dataTask(with: self.url, completionHandler: { (myData, response, error) in
             if let JSONObject = try? JSONSerialization.jsonObject(with: myData!, options: .allowFragments) as! NSDictionary {
-                self.studentArray = JSONObject.object(forKey: altID) as! NSArray
-                let studentDictionary = self.studentArray.firstObject as! NSDictionary
-                let firstName = studentDictionary.object(forKey: "First") as! NSString
-                let lastName = studentDictionary.object(forKey: "Last") as! NSString
-                let ID = studentDictionary.object(forKey: "ID") as! NSInteger
-                self.chicken(altID: altID, ID: ID as Int, firstName: firstName as String, lastName: lastName as String)
+
+                self.studentDictionary = JSONObject.object(forKey: altID) as! NSDictionary
+                let firstName = self.studentDictionary.object(forKey: "first name") as! NSString
+                let lastName = self.studentDictionary.object(forKey: "last name") as! NSString
+                let ID = self.studentDictionary.object(forKey: "id number") as! NSInteger
+                let parentFirst = self.studentDictionary.object(forKey: "parent first name") as! NSString
+                let parentLast = self.studentDictionary.object(forKey: "parent last name") as! NSString
+                let parentCell = self.studentDictionary.object(forKey: "parent cell phone") as! NSString
+                let parentHousehold = self.studentDictionary.object(forKey: "home phone") as! NSString
+                
+                self.checkStudent(altID: altID, ID: ID, firstName: firstName as String, lastName: lastName as String, parentFirst: parentFirst as String, parentLast: parentLast as String, parentCell: parentCell as String, parentHousehold: parentHousehold as String)
             }
         }).resume()
     }
     
-    func chicken(altID: String, ID: Int, firstName: String, lastName: String) {
+    func checkStudent(altID: String, ID: Int, firstName: String, lastName: String, parentFirst: String, parentLast: String, parentCell: String, parentHousehold: String) {
         let predicate =  NSPredicate(format: "altIDNumber = '\(altID)'")
         let query = CKQuery(recordType: "Students", predicate: predicate)
         database.perform(query, inZoneWith: nil) { (records, error) in
@@ -171,8 +188,9 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                     place.setObject("In" as CKRecordValue, forKey: "checkedInOrOut")
                     place.setObject(timeOf as CKRecordValue, forKey: "checkInTime")
                     place.setObject("" as CKRecordValue, forKey: "checkOutTime")
-                    place.setObject("Not implemented yet" as CKRecordValue, forKey: "studentParentPhone")
-                    place.setObject("Not implemented yet" as CKRecordValue, forKey: "studentParentName")
+                    place.setObject(parentHousehold as CKRecordValue, forKey: "studentParentPhone")
+                    place.setObject(parentCell as CKRecordValue, forKey: "studentParentCell")
+                    place.setObject("\(parentFirst) \(parentLast)" as CKRecordValue, forKey: "studentParentName")
                     //Saves student and checks for error
                     self.database.save(place) { (record, error) in
                         if error != nil {
@@ -191,7 +209,6 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                         }
                     }
                 }
-                
             }
         }
     }

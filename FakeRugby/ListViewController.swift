@@ -23,7 +23,6 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBar.barTintColor = UIColor.brown.darker(by: 30)
         tableView.backgroundColor = .orange
         tableView.separatorColor = UIColor.orange
         
@@ -40,11 +39,12 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.navigationBar.barTintColor = UIColor.brown.darker(by: 30)
+        self.navigationController?.navigationBar.tintColor = .white
 
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        
         studentArray = []
         filteredArray = []
         createStudentArray()
@@ -136,9 +136,10 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
                 let checkInTime = student.object(forKey: "checkInTime") as! String
                 let checkOutTime = student.object(forKey: "checkOutTime") as! String
                 let studentParentPhone = student.object(forKey: "studentParentPhone") as! String
+                let studentParentCell = student.object(forKey: "studentParentCell") as! String
                 let studentParentName = student.object(forKey: "studentParentName") as! String
                 
-                let newStudent = Student(firstName: firstName, lastName: lastName, altIDNumber: altIDNumber, idNumber: idNumber, checkedInOrOut: checkedInOrOut, checkInTime: checkInTime, checkOutTime: checkOutTime, studentParentPhone: studentParentPhone, studentParentName: studentParentName)
+                let newStudent = Student(firstName: firstName, lastName: lastName, altIDNumber: altIDNumber, idNumber: idNumber, checkedInOrOut: checkedInOrOut, checkInTime: checkInTime, checkOutTime: checkOutTime, studentParentPhone: studentParentPhone, studentParentCell: studentParentCell, studentParentName: studentParentName)
                 self.studentArray.append(newStudent)
                 
                 self.alphabeticalStudentArray = self.studentArray.sorted(by: { $0.lastName < $1.lastName })
@@ -152,12 +153,14 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let nvc = segue.destination as! DetailsViewController
         
-        if let indexPath = tableView.indexPathForSelectedRow{
+        if let indexPath = tableView.indexPathForSelectedRow {
             nvc.selectedStudent = alphabeticalStudentArray[indexPath.row]
+            nvc.database = database
         }
         else {
             let indexPath = resultsController.tableView.indexPathForSelectedRow!
             nvc.selectedStudent = filteredArray[indexPath.row]
+            nvc.database = database
         }
     }
 }

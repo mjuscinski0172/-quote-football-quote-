@@ -32,13 +32,14 @@ class DetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.barStyle = UIBarStyle.blackTranslucent
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.navigationBar.tintColor = .white
+
         nameLabel.text = selectedStudent.firstName + " " + selectedStudent.lastName
         parentNameLabel.text = selectedStudent.studentParentName
-        parentPhoneNumberLabel.text = selectedStudent.studentParentPhone
+        parentPhoneNumberLabel.text = "\(selectedStudent.studentParentPhone) (Household) \n\(selectedStudent.studentParentCell) (Cell)"
         idLabel.text = selectedStudent.idNumber
         if selectedStudent.checkedInOrOut == "Purchased"{
             timeInLabel.alpha = 0
@@ -82,10 +83,10 @@ class DetailsViewController: UIViewController {
         let confirmAction = UIAlertAction(title: "Yes", style: .destructive) { (action) in
             let passTextField = alert.textFields![0]
             if passTextField.text == self.superSecretPassword {
-                
                 let predicate = NSPredicate(value: true)
                 let query = CKQuery(recordType: "Students", predicate: predicate)
                 self.database.perform(query, inZoneWith: nil) { (records, error) in
+                    print(records!)
                     for student in records! {
                         if student.object(forKey: "firstName") as! String == self.selectedStudent.firstName  {
                             self.database.delete(withRecordID: student.recordID, completionHandler: { (record, error) in
