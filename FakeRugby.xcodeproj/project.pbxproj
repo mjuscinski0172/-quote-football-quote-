@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		610B2763204D90620061C770 /* Student.swift in Sources */ = {isa = PBXBuildFile; fileRef = 610B2762204D90620061C770 /* Student.swift */; };
 		6122044B20595A8500600895 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6122044A20595A8500600895 /* ListViewController.swift */; };
+		618669E72061471F0083BD6C /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618669E62061471F0083BD6C /* DetailsViewController.swift */; };
 		618F97AB20599B04000FCF82 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618F97AA20599B04000FCF82 /* UIColorExtension.swift */; };
 		618F97AD20599B1C000FCF82 /* CALayerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 618F97AC20599B1C000FCF82 /* CALayerExtension.swift */; };
 		61C699DE204848A40082EEF3 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61C699DD204848A40082EEF3 /* ScanViewController.swift */; };
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		610B2762204D90620061C770 /* Student.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Student.swift; sourceTree = "<group>"; };
 		6122044A20595A8500600895 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		618669E62061471F0083BD6C /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 		618F97AA20599B04000FCF82 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		618F97AC20599B1C000FCF82 /* CALayerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CALayerExtension.swift; sourceTree = "<group>"; };
 		61C699DD204848A40082EEF3 /* ScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 				61C699DD204848A40082EEF3 /* ScanViewController.swift */,
 				6122044A20595A8500600895 /* ListViewController.swift */,
 				80FBE4322048431F0064D464 /* Main.storyboard */,
+				618669E62061471F0083BD6C /* DetailsViewController.swift */,
 				610B2762204D90620061C770 /* Student.swift */,
 				618F97AE20599B29000FCF82 /* Extensions */,
 				80FBE4352048431F0064D464 /* Assets.xcassets */,
@@ -184,6 +187,7 @@
 				80FBE4312048431F0064D464 /* ViewController.swift in Sources */,
 				80FBE42F2048431F0064D464 /* AppDelegate.swift in Sources */,
 				61C699DE204848A40082EEF3 /* ScanViewController.swift in Sources */,
+				618669E72061471F0083BD6C /* DetailsViewController.swift in Sources */,
 				6122044B20595A8500600895 /* ListViewController.swift in Sources */,
 				610B2763204D90620061C770 /* Student.swift in Sources */,
 				618F97AD20599B1C000FCF82 /* CALayerExtension.swift in Sources */,
