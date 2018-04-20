@@ -57,10 +57,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.textLabel?.text = "                           " + "\(student.lastName), \(student.firstName)"
             cell.textLabel?.textColor = .white
             
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 42))
-            label.textColor = .white
-            label.textAlignment = .center
-            label.layer.addBorder(edge: UIRectEdge.right, color: UIColor.orange, thickness: 0.5)
+            let label = self.fancyFunctionName(cell: cell)
             label.text = "\(student.checkedInOrOut)".uppercased()
             if student.checkedInOrOut == "In" {
                 label.textColor = UIColor.green
@@ -79,10 +76,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.textLabel?.text = "                         " + "\(student.lastName), \(student.firstName)"
             cell.textLabel?.textColor = .white
             
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 42))
-            label.textAlignment = .center
-            label.textColor = .white
-            label.layer.addBorder(edge: UIRectEdge.right, color: UIColor.orange, thickness: 0.5)
+            let label = self.fancyFunctionName(cell: cell)
             label.text = "\(student.checkedInOrOut)".uppercased()
             if student.checkedInOrOut == "In" {
                 label.textColor = UIColor.green
@@ -93,6 +87,19 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.addSubview(label)
             
             return cell
+        }
+    }
+    
+    func fancyFunctionName(cell: UITableViewCell) -> UILabel {
+        if cell.subviews.count < 2 {
+            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 42))
+            label.textAlignment = .center
+            label.textColor = .white
+            label.layer.addBorder(edge: UIRectEdge.right, color: UIColor.orange, thickness: 0.5)
+            return label
+        }
+        else {
+            return cell.subviews[2] as! UILabel
         }
     }
     
