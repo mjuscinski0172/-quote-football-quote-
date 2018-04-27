@@ -41,13 +41,15 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.navigationController?.navigationBar.isHidden = false
         self.navigationController?.navigationBar.barTintColor = UIColor.brown.darker(by: 30)
         self.navigationController?.navigationBar.tintColor = .white
-
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
         studentArray = []
         filteredArray = []
         createStudentArray()
+        
+        tableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

@@ -16,7 +16,6 @@ class DetailsViewController: UIViewController {
     
     var selectedStudent: Student!
     var database: CKDatabase!
-    //    var detailsStudentArray = [Student]()
     
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var idLabel: UILabel!
@@ -41,21 +40,21 @@ class DetailsViewController: UIViewController {
         parentNameLabel.text = selectedStudent.studentParentName
         parentPhoneNumberLabel.text = "\(selectedStudent.studentParentPhone) (Household) \n\(selectedStudent.studentParentCell) (Cell)"
         idLabel.text = selectedStudent.idNumber
-        if selectedStudent.checkedInOrOut == "Purchased"{
-            timeInLabel.alpha = 0
-            timeOutLabel.alpha = 0
-            timeInTitleLabel.alpha = 0
-//            timeOutTitleLabel.alpha = 0
-            statusLabel.text = "Purchased Tickets"
-            
-        }
-        else if selectedStudent.checkedInOrOut == "In" {
+//        if selectedStudent.checkedInOrOut == "Purchased"{
+//            timeInLabel.alpha = 0
+//            timeOutLabel.alpha = 0
+//            timeInTitleLabel.alpha = 0
+////            timeOutTitleLabel.alpha = 0
+//            statusLabel.text = "Purchased Tickets"
+//
+//        }
+        if selectedStudent.checkedInOrOut == "In" {
             timeInLabel.alpha = 1
             timeInLabel.text = selectedStudent.checkInTime
             timeInTitleLabel.alpha = 1
 //            timeOutTitleLabel.alpha = 0
             timeOutLabel.alpha = 0
-            statusLabel.text = "In Dance"
+            statusLabel.text = "In Game"
         }
         else {
             timeInLabel.alpha = 1
@@ -64,7 +63,7 @@ class DetailsViewController: UIViewController {
             timeOutTitleLabel.alpha = 1
             timeInLabel.text = selectedStudent.checkInTime
             timeOutLabel.text = selectedStudent.checkOutTime
-            statusLabel.text = "Checked Out"
+            statusLabel.text = "Out of Game"
         }
     }
     
