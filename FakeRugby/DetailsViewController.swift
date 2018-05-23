@@ -85,7 +85,6 @@ class DetailsViewController: UIViewController {
                 let predicate = NSPredicate(value: true)
                 let query = CKQuery(recordType: "Students", predicate: predicate)
                 self.database.perform(query, inZoneWith: nil) { (records, error) in
-                    print(records!)
                     for student in records! {
                         if student.object(forKey: "firstName") as! String == self.selectedStudent.firstName  {
                             self.database.delete(withRecordID: student.recordID, completionHandler: { (record, error) in

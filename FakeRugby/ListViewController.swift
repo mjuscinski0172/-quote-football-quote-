@@ -23,6 +23,10 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let exportButton = UIBarButtonItem(title: "Export", style: .plain, target: self, action: #selector(exportData))
+        navigationItem.setRightBarButton(exportButton, animated: true)
+
         tableView.backgroundColor = .orange
         tableView.separatorColor = UIColor.orange
         
@@ -35,6 +39,36 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         resultsController.tableView.delegate = self
         resultsController.tableView.dataSource = self
+    }
+    
+    @objc func exportData() {
+        let interval = TimeInterval(exactly: 0)
+        let date = Date(timeIntervalSinceNow: interval!)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MM-dd-YY"
+        let dateString = dateFormatter.string(from: date)
+
+        let fileName = "\(dateString)_Export.csv"
+        let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(fileName)
+        
+        var csvText: String = "ID Number,Last Name,First Name,Check In Time,Check Out Time\n"
+        for student in studentArray {
+            csvText += "\(student.idNumber),\(student.lastName),\(student.firstName),\(student.checkInTime),\(student.checkOutTime)\n"
+        }
+        
+        do {
+            try csvText.write(to: path, atomically: true, encoding: String.Encoding.utf8)
+
+            let vc = UIActivityViewController(activityItems: [path], applicationActivities: [])
+            vc.popoverPresentationController?.sourceView = self.view
+            vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
+            present(vc, animated: true, completion: nil)
+            
+        } catch {
+            
+            print("Failed to create file")
+            print("\(error)")
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,6 +94,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.textLabel?.textColor = .white
             
             let label = self.fancyFunctionName(cell: cell)
+
             label.text = "\(student.checkedInOrOut)".uppercased()
             if student.checkedInOrOut == "In" {
                 label.textColor = UIColor.green
@@ -93,16 +128,17 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func fancyFunctionName(cell: UITableViewCell) -> UILabel {
-        if cell.subviews.count < 2 {
-            let label = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 42))
-            label.textAlignment = .center
-            label.textColor = .white
-            label.layer.addBorder(edge: UIRectEdge.right, color: UIColor.orange, thickness: 0.5)
-            return label
+        for subview in cell.subviews {
+            if subview.isKind(of: UILabel.self) {
+                return subview as! UILabel
+            }
         }
-        else {
-            return cell.subviews[2] as! UILabel
-        }
+        
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 120, height: 42))
+        label.textAlignment = .center
+        label.textColor = .white
+        label.layer.addBorder(edge: UIRectEdge.right, color: UIColor.orange, thickness: 0.5)
+        return label
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

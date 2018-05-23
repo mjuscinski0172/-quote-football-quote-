@@ -59,14 +59,13 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         view.layer.addSublayer(previewLayer)
         
         //Pulls the URL for the JSON
-        var urlString = ""
-        let predicate = NSPredicate(value: true)
-        let JSONQuery = CKQuery(recordType: "JSONUrl", predicate: predicate)
-        database.perform(JSONQuery, inZoneWith: nil) { (records, error) in
-            urlString = records?.first?.object(forKey: "url")! as! String
-            print(urlString)
-            self.url = URL(string: urlString)!
-        }
+//        var urlString = ""
+//        let predicate = NSPredicate(value: true)
+//        let JSONQuery = CKQuery(recordType: "JSONUrl", predicate: predicate)
+//        database.perform(JSONQuery, inZoneWith: nil) { (records, error) in
+//            urlString = records?.first?.object(forKey: "url")! as! String
+//            self.url = URL(string: urlString)!
+//        }
         
         session.startRunning()
     }
@@ -86,21 +85,28 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
     }
     
     func getJSON(altID: String) {
-        URLSession.shared.dataTask(with: self.url, completionHandler: { (myData, response, error) in
-            if let JSONObject = try? JSONSerialization.jsonObject(with: myData!, options: .allowFragments) as! NSDictionary {
-
-                self.studentDictionary = JSONObject.object(forKey: altID) as! NSDictionary
-                let firstName = self.studentDictionary.object(forKey: "first name") as! NSString
-                let lastName = self.studentDictionary.object(forKey: "last name") as! NSString
-                let ID = self.studentDictionary.object(forKey: "id number") as! NSInteger
-                let parentFirst = self.studentDictionary.object(forKey: "parent first name") as! NSString
-                let parentLast = self.studentDictionary.object(forKey: "parent last name") as! NSString
-                let parentCell = self.studentDictionary.object(forKey: "parent cell phone") as! NSString
-                let parentHousehold = self.studentDictionary.object(forKey: "home phone") as! NSString
-                
-                self.checkStudent(altID: altID, ID: ID, firstName: firstName as String, lastName: lastName as String, parentFirst: parentFirst as String, parentLast: parentLast as String, parentCell: parentCell as String, parentHousehold: parentHousehold as String)
+        // old url = https://www.jasonbase.com/things/o0XK.json
+        
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: "JSONUrl", predicate: predicate)
+        database.perform(query, inZoneWith: nil) { (records, error) in
+            if let asset = records?.first?.object(forKey: "JSONData") as? CKAsset,
+                let myData = NSData(contentsOf: asset.fileURL) {
+                if let JSONObject = try? JSONSerialization.jsonObject(with: myData as Data, options: .allowFragments) as! NSDictionary {
+                    
+                    self.studentDictionary = JSONObject.object(forKey: altID) as! NSDictionary
+                    let firstName = self.studentDictionary.object(forKey: "first name") as! NSString
+                    let lastName = self.studentDictionary.object(forKey: "last name") as! NSString
+                    let ID = self.studentDictionary.object(forKey: "id number") as! NSInteger
+                    let parentFirst = self.studentDictionary.object(forKey: "parent first name") as! NSString
+                    let parentLast = self.studentDictionary.object(forKey: "parent last name") as! NSString
+                    let parentCell = self.studentDictionary.object(forKey: "parent cell phone") as! NSString
+                    let parentHousehold = self.studentDictionary.object(forKey: "home phone") as! NSString
+                    
+                    self.checkStudent(altID: altID, ID: ID, firstName: firstName as String, lastName: lastName as String, parentFirst: parentFirst as String, parentLast: parentLast as String, parentCell: parentCell as String, parentHousehold: parentHousehold as String)
+                }
             }
-        }).resume()
+        }
     }
     
     func checkStudent(altID: String, ID: Int, firstName: String, lastName: String, parentFirst: String, parentLast: String, parentCell: String, parentHousehold: String) {
@@ -156,8 +162,8 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
                         self.present(alert, animated: true, completion: nil)
                     }
                     else{
-                        var alert = UIAlertController(title: "Error", message: "This student has been checked out already", preferredStyle: .alert)
-                        var okButton = UIAlertAction(title: "OK", style: .destructive, handler: { (action) in
+                        let alert = UIAlertController(title: "Error", message: "This student has been checked out already", preferredStyle: .alert)
+                        let okButton = UIAlertAction(title: "OK", style: .destructive, handler: { (action) in
                             self.runSession()
                         })
                         alert.addAction(okButton)

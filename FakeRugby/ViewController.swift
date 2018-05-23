@@ -14,12 +14,17 @@ class ViewController: UIViewController {
     var resetAllPassword = "57bw32Gc"
     var studentArray = [CKRecord]()
     var database = CKContainer.default().publicCloudDatabase
+    var timer = Timer()
 
     @IBOutlet weak var deleteAllButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.internetTest()
         
+        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { (t) in
+            self.internetTest()
+        })
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,7 +97,6 @@ class ViewController: UIViewController {
             //Goes through studentArray and deletes each student
             DispatchQueue.main.async {
                 for student in self.studentArray {
-                    print("Ka-Chang")
                     self.database.delete(withRecordID: student.recordID, completionHandler: { (id, error) in
                         //Displays an alert if there is an error
                         if error != nil {
@@ -103,6 +107,31 @@ class ViewController: UIViewController {
                         }
                     })
                 }
+            }
+        }
+    }
+    
+    func internetTest() {
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: "JSONUrl", predicate: predicate)
+        database.perform(query, inZoneWith: nil) { (records, error) in
+            if records?.count == 0 {
+                //If we cannot pull the JSON URL from CloudKit, there is probably no internet so tell the user
+                let alert = UIAlertController(title: "Error: No Internet Connection", message: "Please connect to the Internet and try again", preferredStyle: .alert)
+                let retryAction = UIAlertAction(title: "Retry", style: .default, handler: { (action) in
+                    self.internetTest()
+                })
+                alert.addAction(retryAction)
+                self.present(alert, animated: true, completion: nil)
+            }
+            else if error != nil{
+                //Creates an alert to inform the user of the error if there is one
+                let alert = UIAlertController(title: "Error", message: error.debugDescription, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "Retry", style: .default, handler: { (action) in
+                    self.internetTest()
+                })
+                alert.addAction(okAction)
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
